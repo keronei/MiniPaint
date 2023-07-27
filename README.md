@@ -49,3 +49,7 @@ The steps include:
    ```
    Only draw if the movement was equal to or more that the accepted tolerance.
 7. The drawing can optionally be cached in bitmap, path or other mechanism.
+
+## Screenshots
+
+<img src="screenshots/face_drawing.jpg" width="230" height="470"/>&nbsp;&nbsp;&nbsp;&nbsp;<img src="screenshots/flowe_drawing.jpg" width="230" height="470"/>
