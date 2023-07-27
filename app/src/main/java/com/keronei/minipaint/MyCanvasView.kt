@@ -15,8 +15,6 @@ import kotlin.math.abs
 private const val STROKE_WIDTH = 12f
 
 class MyCanvasView(context: Context) : View(context) {
-    private lateinit var extraCanvas: Canvas
-    private lateinit var extraBitmap: Bitmap
     private val backgroundColor = ResourcesCompat.getColor(resources, R.color.colorBackground, null)
     private val drawColor = ResourcesCompat.getColor(resources, R.color.colorPaint, null)
     private var path = Path()
@@ -30,6 +28,9 @@ class MyCanvasView(context: Context) : View(context) {
     private val touchTolerance = ViewConfiguration.get(context).scaledTouchSlop
 
     private lateinit var frame: Rect
+
+    private val drawing = Path()
+    private val currentPath = Path()
 
     private val paint = Paint().apply {
         color = drawColor
@@ -73,28 +74,27 @@ class MyCanvasView(context: Context) : View(context) {
             )
             currentX = motionTouchEventX
             currentY = motionTouchEventY
-            extraCanvas.drawPath(path, paint)
         }
         invalidate()
     }
 
     private fun touchUp() {
         path.reset()
+        drawing.addPath(currentPath)
+        currentPath.reset()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        if (::extraBitmap.isInitialized) extraBitmap.recycle()
-        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        extraCanvas = Canvas(extraBitmap)
-        extraCanvas.drawColor(backgroundColor)
         val inset = 40
         frame = Rect(inset, inset, width - inset, height - inset)
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.drawBitmap(extraBitmap, 0f, 0f, null)
+        canvas?.drawRect(frame, paint)
+        canvas?.drawPath(drawing, paint)
+        canvas?.drawPath(currentPath, paint)
         canvas?.drawRect(frame, paint)
     }
 }
