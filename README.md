@@ -52,4 +52,4 @@ The steps include:
 
 ## Screenshots
 
-<img src="screenshots/face_drawing.jpg" width="230" height="470"/>&nbsp;&nbsp;&nbsp;&nbsp;<img src="screenshots/flowe_drawing.jpg" width="230" height="470"/>
+<img src="screenshots/face_drawing.jpg" width="230" height="470"/>&nbsp;&nbsp;&nbsp;&nbsp;<img src="screenshots/flower_drawing.jpg" width="230" height="470"/>
