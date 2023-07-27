@@ -1,7 +1,6 @@
 package com.keronei.minipaint
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
@@ -15,7 +14,6 @@ import kotlin.math.abs
 private const val STROKE_WIDTH = 12f
 
 class MyCanvasView(context: Context) : View(context) {
-    private val backgroundColor = ResourcesCompat.getColor(resources, R.color.colorBackground, null)
     private val drawColor = ResourcesCompat.getColor(resources, R.color.colorPaint, null)
     private var path = Path()
 
