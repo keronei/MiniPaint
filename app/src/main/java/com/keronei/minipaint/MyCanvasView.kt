@@ -1,10 +1,12 @@
 package com.keronei.minipaint
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -15,6 +17,8 @@ private const val STROKE_WIDTH = 12f
 
 class MyCanvasView(context: Context) : View(context) {
     private val drawColor = ResourcesCompat.getColor(resources, R.color.colorPaint, null)
+    private val backgroundColor = ResourcesCompat.getColor(resources, R.color.colorBackground, null)
+
     private var path = Path()
 
     private var motionTouchEventX = 0f
@@ -29,6 +33,9 @@ class MyCanvasView(context: Context) : View(context) {
 
     private val drawing = Path()
     private val currentPath = Path()
+
+    private lateinit var extraCanvas: Canvas
+    private lateinit var extraBitmap: Bitmap
 
     private val paint = Paint().apply {
         color = drawColor
@@ -45,10 +52,17 @@ class MyCanvasView(context: Context) : View(context) {
         motionTouchEventY = event.y
 
         when (event.action) {
-            MotionEvent.ACTION_DOWN -> touchStart()
-            MotionEvent.ACTION_MOVE -> touchMove()
-            MotionEvent.ACTION_UP -> touchUp()
+            MotionEvent.ACTION_DOWN ->{
+                touchStart()
+            }
+            MotionEvent.ACTION_MOVE -> {
+                touchMove()
+            }
+            MotionEvent.ACTION_UP -> {
+                touchUp()
+            }
         }
+
         return true
     }
 
@@ -72,12 +86,14 @@ class MyCanvasView(context: Context) : View(context) {
             )
             currentX = motionTouchEventX
             currentY = motionTouchEventY
+
+            extraCanvas.drawPath(path, paint)
         }
         invalidate()
     }
 
     private fun touchUp() {
-        path.reset()
+        //path.reset()
         drawing.addPath(currentPath)
         currentPath.reset()
     }
@@ -86,13 +102,20 @@ class MyCanvasView(context: Context) : View(context) {
         super.onSizeChanged(w, h, oldw, oldh)
         val inset = 40
         frame = Rect(inset, inset, width - inset, height - inset)
+
+        if (::extraBitmap.isInitialized) extraBitmap.recycle()
+        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        extraCanvas = Canvas(extraBitmap)
+        extraCanvas.drawColor(backgroundColor)
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.drawRect(frame, paint)
+        //canvas?.drawRect(frame, paint)
         canvas?.drawPath(drawing, paint)
         canvas?.drawPath(currentPath, paint)
         canvas?.drawRect(frame, paint)
+
+        canvas?.drawBitmap(extraBitmap, 0f, 0f, null)
     }
 }
